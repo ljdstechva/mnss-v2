@@ -74,6 +74,12 @@ body {
   height: 100%;
 }
 
+html {
+  scrollbar-color: color-mix(in srgb, var(--primary) 68%, transparent) var(--background);
+  scrollbar-gutter: stable;
+  scrollbar-width: auto;
+}
+
 html.lenis,
 html.lenis body {
   height: auto;
@@ -96,5 +102,19 @@ html.lenis body {
 }
 
 ::-webkit-scrollbar {
-  width: 0px;
+  width: 12px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--background);
+}
+
+::-webkit-scrollbar-thumb {
+  background: color-mix(in srgb, var(--primary) 68%, transparent);
+  border: 3px solid var(--background);
+  border-radius: 999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--primary);
 }

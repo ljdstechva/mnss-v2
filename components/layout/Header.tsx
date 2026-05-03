@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { usePathname } from 'next/navigation'
@@ -20,14 +20,32 @@ const navLinks = [
 export default function Header() {
   const pathname = usePathname()
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+  const [isScrolled, setIsScrolled] = useState(false)
+  const isHome = pathname === '/'
+  const isTransparent = isHome && !isScrolled && !isMobileMenuOpen
+
+  useEffect(() => {
+    const updateScrollState = () => {
+      setIsScrolled(window.scrollY > 32)
+    }
+
+    updateScrollState()
+    window.addEventListener('scroll', updateScrollState, { passive: true })
+
+    return () => {
+      window.removeEventListener('scroll', updateScrollState)
+    }
+  }, [pathname])
 
   return (
     <motion.header
       className={cn(
         'fixed top-0 left-0 right-0 z-50 px-6 py-4 transition-[background-color,box-shadow,border-color] duration-300',
-        'border-b border-border/70 bg-background/95 shadow-sm backdrop-blur-xl'
+        isTransparent
+          ? 'border-b border-transparent bg-transparent shadow-none'
+          : 'border-b border-border/70 bg-background/95 shadow-sm backdrop-blur-xl'
       )}
-      initial={{ y: -100 }}
+      initial={isHome ? { y: -100 } : false}
       animate={{ y: 0 }}
       transition={{ duration: 0.5, ease: 'easeOut' }}
     >
@@ -46,11 +64,21 @@ export default function Header() {
               priority
             />
           </div>
-          <span className="min-w-0 leading-none text-primary transition-colors">
+          <span
+            className={cn(
+              'min-w-0 leading-none transition-colors',
+              isTransparent ? 'text-white drop-shadow-sm' : 'text-primary'
+            )}
+          >
             <span className="block text-base font-black tracking-tight sm:text-lg">
-              MNS Suarez
+              MNS SUAREZ
             </span>
-            <span className="mt-1 block whitespace-nowrap text-[10px] font-medium uppercase tracking-[0.11em] text-primary/68 sm:text-[11px]">
+            <span
+              className={cn(
+                'mt-1 block whitespace-nowrap text-[10px] font-medium uppercase tracking-[0.11em] sm:text-[11px]',
+                isTransparent ? 'text-white/78' : 'text-primary/68'
+              )}
+            >
               Environmental Studies Consultants
             </span>
           </span>
@@ -64,17 +92,30 @@ export default function Header() {
               href={link.href}
               className={cn(
                 'rounded-md px-1 py-1 text-sm font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary/70',
-                'text-primary/75 hover:text-primary',
-                pathname === link.href && 'text-primary'
+                isTransparent
+                  ? 'text-white/88 drop-shadow-sm hover:text-secondary'
+                  : 'text-primary/75 hover:text-primary',
+                pathname === link.href && (isTransparent ? 'text-white' : 'text-primary')
               )}
             >
               {link.name}
             </Link>
           ))}
-          <ThemeToggle />
+          <ThemeToggle
+            className={
+              isTransparent
+                ? 'border-white/25 bg-white/15 text-white hover:bg-white/25'
+                : undefined
+            }
+          />
           <Link
             href="/#contact"
-            className="bg-primary text-white px-5 py-2 rounded-full text-sm font-semibold hover:bg-primary/90 transition-colors"
+            className={cn(
+              'px-5 py-2 rounded-full text-sm font-semibold transition-colors',
+              isTransparent
+                ? 'bg-white text-primary hover:bg-secondary'
+                : 'bg-primary text-white hover:bg-primary/90'
+            )}
           >
             Get a Quote
           </Link>
@@ -82,11 +123,17 @@ export default function Header() {
 
         {/* Mobile Toggle */}
         <div className="flex items-center gap-4 md:hidden">
-          <ThemeToggle />
+          <ThemeToggle
+            className={
+              isTransparent
+                ? 'border-white/25 bg-white/15 text-white hover:bg-white/25'
+                : undefined
+            }
+          />
           <button
             className={cn(
               'rounded-full p-2 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary/70',
-              'text-primary'
+              isTransparent ? 'text-white drop-shadow-sm' : 'text-primary'
             )}
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             aria-label="Toggle Menu"
