@@ -4,6 +4,9 @@ import { motion } from 'framer-motion'
 import { Mail, Phone, MapPin, Send } from 'lucide-react'
 import { useState, type FormEvent } from 'react'
 
+const formControlClass =
+  'w-full rounded-2xl border border-primary/15 bg-white px-6 py-4 text-primary caret-primary shadow-sm outline-none transition-all placeholder:text-primary/45 focus:border-secondary/70 focus:ring-2 focus:ring-secondary/45 dark:border-white/10 dark:bg-white/10 dark:text-white dark:caret-white dark:placeholder:text-white/45'
+
 export default function Contact() {
   const [status, setStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle')
   const [statusMessage, setStatusMessage] = useState('')
@@ -114,7 +117,7 @@ export default function Contact() {
                       autoComplete="name"
                       required
                       placeholder="Juan Dela Cruz"
-                      className="w-full px-6 py-4 rounded-2xl bg-gray-100 dark:bg-slate-900 border border-border text-blue-950 dark:text-foreground focus:outline-none focus:ring-2 focus:ring-secondary/50 transition-all placeholder:text-blue-950/40 dark:placeholder:text-foreground/40"
+                      className={formControlClass}
                     />
                   </div>
                   <div className="space-y-2">
@@ -126,7 +129,7 @@ export default function Contact() {
                       autoComplete="email"
                       required
                       placeholder="juan@example.com"
-                      className="w-full px-6 py-4 rounded-2xl bg-gray-100 dark:bg-slate-900 border border-border text-blue-950 dark:text-foreground focus:outline-none focus:ring-2 focus:ring-secondary/50 transition-all placeholder:text-blue-950/40 dark:placeholder:text-foreground/40"
+                      className={formControlClass}
                     />
                   </div>
                 </div>
@@ -135,7 +138,7 @@ export default function Contact() {
                   <select
                     id="contact-service"
                     name="service"
-                    className="w-full px-6 py-4 rounded-2xl bg-gray-100 dark:bg-slate-900 border border-border text-blue-950 dark:text-foreground focus:outline-none focus:ring-2 focus:ring-secondary/50 transition-all appearance-none"
+                    className={`${formControlClass} appearance-none`}
                   >
                     <option>Environmental Impact Assessment</option>
                     <option>Sustainability Auditing</option>
@@ -151,7 +154,7 @@ export default function Contact() {
                     rows={5}
                     required
                     placeholder="Tell us about your project..."
-                    className="w-full px-6 py-4 rounded-2xl bg-gray-100 dark:bg-slate-900 border border-border text-blue-950 dark:text-foreground focus:outline-none focus:ring-2 focus:ring-secondary/50 transition-all resize-none placeholder:text-blue-950/40 dark:placeholder:text-foreground/40"
+                    className={`${formControlClass} resize-none`}
                   ></textarea>
                 </div>
                 <p
