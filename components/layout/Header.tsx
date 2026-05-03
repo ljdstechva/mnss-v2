@@ -31,19 +31,28 @@ export default function Header() {
       animate={{ y: 0 }}
       transition={{ duration: 0.5, ease: 'easeOut' }}
     >
-      <div className="max-w-7xl mx-auto flex items-center justify-between">
-        <Link href="/" className="flex items-center gap-2">
-          <div className="relative w-10 h-10">
+      <div className="max-w-7xl mx-auto flex items-center justify-between gap-4">
+        <Link
+          href="/"
+          aria-label="MNS Suarez Environmental Studies Consultants home"
+          className="flex min-w-0 items-center gap-2.5"
+        >
+          <div className="relative h-10 w-10 shrink-0 sm:h-11 sm:w-11">
             <Image
               src="/images/mnss-logo.png"
-              alt="MNS Logo"
+              alt="MNS Suarez logo"
               fill
               className="object-contain"
               priority
             />
           </div>
-          <span className="font-bold text-xl tracking-tight text-primary transition-colors">
-            MNS
+          <span className="min-w-0 leading-none text-primary transition-colors">
+            <span className="block text-base font-black tracking-tight sm:text-lg">
+              MNS Suarez
+            </span>
+            <span className="mt-1 block whitespace-nowrap text-[10px] font-medium uppercase tracking-[0.11em] text-primary/68 sm:text-[11px]">
+              Environmental Studies Consultants
+            </span>
           </span>
         </Link>
 
