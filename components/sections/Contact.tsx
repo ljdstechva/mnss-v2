@@ -5,7 +5,7 @@ import { Mail, Phone, MapPin, Send } from 'lucide-react'
 import { useState, type FormEvent } from 'react'
 
 const formControlClass =
-  'w-full rounded-2xl border border-primary/15 bg-white px-6 py-4 text-primary caret-primary shadow-sm outline-none transition-all placeholder:text-primary/45 focus:border-secondary/70 focus:ring-2 focus:ring-secondary/45 dark:border-white/10 dark:bg-white/10 dark:text-white dark:caret-white dark:placeholder:text-white/45'
+  'contact-form-control w-full rounded-2xl border border-primary/15 bg-white px-6 py-4 shadow-sm outline-none transition-all placeholder:text-primary/45 focus:border-secondary/70 focus:ring-2 focus:ring-secondary/45'
 
 export default function Contact() {
   const [status, setStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle')

@@ -101,6 +101,37 @@ html.lenis body {
   pointer-events: none;
 }
 
+.contact-form-control {
+  background-color: #ffffff !important;
+  color: #0a1f16 !important;
+  -webkit-text-fill-color: #0a1f16 !important;
+  caret-color: var(--primary) !important;
+  color-scheme: light;
+}
+
+.contact-form-control::placeholder {
+  color: rgba(10, 31, 22, 0.52) !important;
+  -webkit-text-fill-color: rgba(10, 31, 22, 0.52) !important;
+  opacity: 1;
+}
+
+.contact-form-control option {
+  background-color: #ffffff;
+  color: #0a1f16;
+}
+
+textarea.contact-form-control {
+  color: #0a1f16 !important;
+  -webkit-text-fill-color: #0a1f16 !important;
+}
+
+input.contact-form-control:-webkit-autofill,
+textarea.contact-form-control:-webkit-autofill,
+select.contact-form-control:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0 1000px #ffffff inset !important;
+  -webkit-text-fill-color: #0a1f16 !important;
+}
+
 ::-webkit-scrollbar {
   width: 12px;
 }
