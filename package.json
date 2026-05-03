@@ -6,16 +6,19 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "setup:mnss-supabase": "node scripts/apply-mnss-supabase-schema.mjs"
   },
   "dependencies": {
     "@gsap/react": "^2.1.2",
+    "@supabase/ssr": "^0.10.2",
+    "@supabase/supabase-js": "^2.105.1",
     "clsx": "^2.1.1",
     "framer-motion": "^12.38.0",
     "gsap": "^3.14.2",
     "lenis": "^1.3.21",
     "lucide-react": "^1.7.0",
-    "next": "16.2.1",
+    "next": "^16.2.4",
     "next-themes": "^0.4.6",
     "react": "19.2.4",
     "react-dom": "19.2.4",
@@ -27,8 +30,11 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
-    "eslint-config-next": "16.2.1",
+    "eslint-config-next": "^16.2.4",
     "tailwindcss": "^4",
     "typescript": "^5"
+  },
+  "overrides": {
+    "postcss": "^8.5.10"
   }
 }

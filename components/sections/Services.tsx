@@ -9,6 +9,8 @@ import {
   FileSearch,
   Zap
 } from 'lucide-react'
+import type { MnssSiteInformation } from '@/types/database'
+import { fallbackSiteInformation } from '@/lib/mnss-fallbacks'
 
 const services = [
   {
@@ -43,7 +45,15 @@ const services = [
   },
 ]
 
-export default function Services() {
+type ServicesProps = {
+  serviceOverview?: MnssSiteInformation | null
+}
+
+export default function Services({ serviceOverview }: ServicesProps) {
+  const fallbackOverview = fallbackSiteInformation.find(
+    (item) => item.section_key === 'services_overview'
+  )
+
   return (
     <section id="services" className="py-24 bg-background">
       <div className="max-w-7xl mx-auto px-6">
@@ -58,7 +68,9 @@ export default function Services() {
               Expert EIA Services for <span className="text-secondary">ECC Approval.</span>
             </p>
             <p className="text-foreground/60 text-lg">
-              We specialize in the preparation of regulatory reports under the Philippine EIS System, ensuring your projects meet all legal and ecological requirements.
+              {serviceOverview?.body ??
+                fallbackOverview?.body ??
+                'We specialize in the preparation of regulatory reports under the Philippine EIS System, ensuring your projects meet all legal and ecological requirements.'}
             </p>
           </motion.div>
         </div>

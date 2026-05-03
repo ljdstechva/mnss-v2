@@ -1,8 +1,9 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
+import { usePathname } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Menu, X } from 'lucide-react'
 import { cn } from '@/lib/utils'
@@ -17,22 +18,14 @@ const navLinks = [
 ]
 
 export default function Header() {
-  const [isScrolled, setIsScrolled] = useState(false)
+  const pathname = usePathname()
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
-
-  useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 50)
-    }
-    window.addEventListener('scroll', handleScroll)
-    return () => window.removeEventListener('scroll', handleScroll)
-  }, [])
 
   return (
     <motion.header
       className={cn(
-        'fixed top-0 left-0 right-0 z-50 transition-all duration-300 px-6 py-4',
-        isScrolled ? 'bg-background/80 backdrop-blur-md shadow-sm' : 'bg-transparent'
+        'fixed top-0 left-0 right-0 z-50 px-6 py-4 transition-[background-color,box-shadow,border-color] duration-300',
+        'border-b border-border/70 bg-background/95 shadow-sm backdrop-blur-xl'
       )}
       initial={{ y: -100 }}
       animate={{ y: 0 }}
@@ -49,10 +42,7 @@ export default function Header() {
               priority
             />
           </div>
-          <span className={cn(
-            'font-bold text-xl tracking-tight transition-colors',
-            isScrolled ? 'text-primary' : 'text-primary dark:text-white'
-          )}>
+          <span className="font-bold text-xl tracking-tight text-primary transition-colors">
             MNS
           </span>
         </Link>
@@ -64,8 +54,9 @@ export default function Header() {
               key={link.name}
               href={link.href}
               className={cn(
-                'text-sm font-medium transition-all hover:text-secondary',
-                isScrolled ? 'text-foreground' : 'text-primary-foreground dark:text-white'
+                'rounded-md px-1 py-1 text-sm font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary/70',
+                'text-primary/75 hover:text-primary',
+                pathname === link.href && 'text-primary'
               )}
             >
               {link.name}
@@ -73,7 +64,7 @@ export default function Header() {
           ))}
           <ThemeToggle />
           <Link
-            href="#contact"
+            href="/#contact"
             className="bg-primary text-white px-5 py-2 rounded-full text-sm font-semibold hover:bg-primary/90 transition-colors"
           >
             Get a Quote
@@ -84,7 +75,10 @@ export default function Header() {
         <div className="flex items-center gap-4 md:hidden">
           <ThemeToggle />
           <button
-            className="text-primary"
+            className={cn(
+              'rounded-full p-2 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary/70',
+              'text-primary'
+            )}
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             aria-label="Toggle Menu"
           >
@@ -118,7 +112,7 @@ export default function Header() {
                 <ThemeToggle />
               </div>
               <Link
-                href="#contact"
+                href="/#contact"
                 className="bg-primary text-white px-5 py-3 rounded-xl text-center font-semibold"
                 onClick={() => setIsMobileMenuOpen(false)}
               >

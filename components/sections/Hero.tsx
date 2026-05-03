@@ -2,12 +2,19 @@
 
 import { motion, useScroll, useTransform } from 'framer-motion'
 import { useRef } from 'react'
-import Image from 'next/image'
 import Link from 'next/link'
 import { ArrowRight } from 'lucide-react'
+import { ManagedImage } from '@/components/ui/ManagedImage'
+import type { MnssHeroSection } from '@/types/database'
+import { fallbackHero } from '@/lib/mnss-fallbacks'
 
-export default function Hero() {
+type HeroProps = {
+  hero?: MnssHeroSection | null
+}
+
+export default function Hero({ hero = fallbackHero }: HeroProps) {
   const containerRef = useRef<HTMLDivElement>(null)
+  const content = hero ?? fallbackHero
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ['start start', 'end start'],
@@ -18,14 +25,13 @@ export default function Hero() {
 
   return (
     <section ref={containerRef} className="relative h-screen w-full overflow-hidden flex items-center justify-center pt-20">
-      {/* Background Image with Parallax */}
       <motion.div style={{ y }} className="absolute inset-0 -z-10 h-[120%] w-full">
-        <Image
-          src="https://images.unsplash.com/photo-1466692476868-aef1dfb1e735?q=80&w=2070&auto=format&fit=crop"
-          alt="Environmental Sustainability"
-          fill
+        <ManagedImage
+          src={content.image_url}
+          alt="Environmental consulting field work"
           className="object-cover"
           priority
+          sizes="100vw"
         />
         <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/50 to-background" />
       </motion.div>
@@ -37,32 +43,34 @@ export default function Hero() {
           transition={{ duration: 0.8, delay: 0.2 }}
           style={{ opacity }}
         >
-          <span className="inline-block px-4 py-1.5 rounded-full bg-secondary/20 text-secondary-foreground text-sm font-semibold mb-6 backdrop-blur-sm border border-secondary/30">
-            Sustainable Farming Tech & Consultancy
+          <span className="inline-block px-4 py-1.5 rounded-full bg-secondary/15 text-secondary text-sm font-semibold mb-6 backdrop-blur-md border border-secondary/45 shadow-sm">
+            {content.eyebrow ?? 'Environmental Studies Consultants'}
           </span>
           <h1 className="text-5xl md:text-7xl font-bold text-white mb-6 leading-[1.1]">
-            Bringing Innovation to Your <span className="text-secondary">Green</span> Journey.
+            <HighlightedHeadline
+              headline={content.headline}
+              highlightedText={content.highlighted_text}
+            />
           </h1>
           <p className="text-xl text-white/80 mb-10 max-w-xl">
-            From precision agriculture to sustainable practices, we help you grow more efficiently and profitably. Join us in transforming the way we impact our planet.
+            {content.body ?? fallbackHero.body}
           </p>
           <div className="flex flex-wrap gap-4">
             <Link
-              href="#contact"
+              href={content.primary_cta_href ?? '/#contact'}
               className="bg-secondary text-primary font-bold px-8 py-4 rounded-full flex items-center gap-2 hover:bg-secondary/90 transition-all hover:scale-105"
             >
-              Get Started <ArrowRight size={20} />
+              {content.primary_cta_label ?? 'Request consultation'} <ArrowRight size={20} />
             </Link>
             <Link
-              href="#about"
+              href={content.secondary_cta_href ?? '/projects'}
               className="bg-white/10 backdrop-blur-md border border-white/30 text-white font-bold px-8 py-4 rounded-full hover:bg-white/20 transition-all"
             >
-              Learn More
+              {content.secondary_cta_label ?? 'View projects'}
             </Link>
           </div>
         </motion.div>
 
-        {/* Floating Card - Inspired by Farmora */}
         <motion.div
           initial={{ opacity: 0, scale: 0.8, y: 100 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -74,12 +82,12 @@ export default function Hero() {
               <div className="bg-white/10 backdrop-blur-xl border border-white/20 p-8 rounded-3xl shadow-2xl">
                 <div className="flex items-center gap-4 mb-6">
                   <div className="w-12 h-12 rounded-full bg-secondary flex items-center justify-center text-primary font-bold text-xl">
-                    10+
+                    1997
                   </div>
-                  <h3 className="text-xl font-bold text-white">Years of Innovation</h3>
+                  <h3 className="text-xl font-bold text-white">Environmental study support</h3>
                 </div>
                 <p className="text-white/70 text-sm leading-relaxed mb-6">
-                  With a decade of experience, we've pioneered advancements in precision agriculture, helping partners increase yields while reducing water consumption by 25%.
+                  From EIA documentation to ECC compliance planning, MNSS helps project owners prepare clearer environmental requirements and stakeholder-ready reports.
                 </p>
                 <div className="flex gap-2">
                   {[1, 2, 3].map((i) => (
@@ -98,5 +106,41 @@ export default function Hero() {
         </motion.div>
       </div>
     </section>
+  )
+}
+
+function HighlightedHeadline({
+  headline,
+  highlightedText,
+}: {
+  headline: string
+  highlightedText?: string | null
+}) {
+  const highlighted = highlightedText?.trim()
+
+  if (!highlighted) {
+    return <>{headline}</>
+  }
+
+  const startIndex = headline.toLowerCase().indexOf(highlighted.toLowerCase())
+
+  if (startIndex < 0) {
+    return (
+      <>
+        {headline} <span className="text-secondary">{highlighted}</span>
+      </>
+    )
+  }
+
+  const before = headline.slice(0, startIndex)
+  const match = headline.slice(startIndex, startIndex + highlighted.length)
+  const after = headline.slice(startIndex + highlighted.length)
+
+  return (
+    <>
+      {before}
+      <span className="text-secondary">{match}</span>
+      {after}
+    </>
   )
 }

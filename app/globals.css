@@ -11,6 +11,9 @@
   --color-accent: #D9ED92;
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-border: var(--border);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary-foreground: var(--secondary-foreground);
 
   --animate-fade-in: fade-in 0.6s ease-out;
   --animate-slide-up: slide-up 0.8s ease-out;
@@ -40,14 +43,20 @@
   --background: oklch(0.985 0.005 180);
   --foreground: oklch(0.145 0.025 150);
   --primary: #1B4332;
+  --primary-foreground: #ffffff;
   --secondary: #78BE20;
+  --secondary-foreground: #1B4332;
+  --border: oklch(0.9 0.012 160);
 }
 
 .dark {
   --background: oklch(0.145 0.025 150);
   --foreground: oklch(0.985 0.005 180);
   --primary: #52B788; /* Lighter green for dark mode */
+  --primary-foreground: #04130d;
   --secondary: #95D5B2;
+  --secondary-foreground: #04130d;
+  --border: oklch(0.3 0.03 150);
 }
 
 body {
@@ -63,6 +72,27 @@ body {
 html,
 body {
   height: 100%;
+}
+
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+.lenis:not(.lenis-autoToggle).lenis-stopped {
+  overflow: clip;
+}
+
+.lenis [data-lenis-prevent],
+.lenis [data-lenis-prevent-wheel],
+.lenis [data-lenis-prevent-touch],
+.lenis [data-lenis-prevent-vertical],
+.lenis [data-lenis-prevent-horizontal] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-smooth iframe {
+  pointer-events: none;
 }
 
 ::-webkit-scrollbar {

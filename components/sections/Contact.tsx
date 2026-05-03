@@ -2,8 +2,47 @@
 
 import { motion } from 'framer-motion'
 import { Mail, Phone, MapPin, Send } from 'lucide-react'
+import { useState, type FormEvent } from 'react'
 
 export default function Contact() {
+  const [status, setStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle')
+  const [statusMessage, setStatusMessage] = useState('')
+
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault()
+    const form = event.currentTarget
+    const formData = new FormData(form)
+
+    setStatus('submitting')
+    setStatusMessage('')
+
+    try {
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: formData.get('name'),
+          email: formData.get('email'),
+          service: formData.get('service'),
+          message: formData.get('message'),
+        }),
+      })
+
+      const result = (await response.json()) as { message?: string; error?: string }
+
+      if (!response.ok) {
+        throw new Error(result.error ?? 'Unable to send message.')
+      }
+
+      form.reset()
+      setStatus('success')
+      setStatusMessage(result.message ?? 'Message received successfully.')
+    } catch (error) {
+      setStatus('error')
+      setStatusMessage(error instanceof Error ? error.message : 'Unable to send message.')
+    }
+  }
+
   return (
     <section id="contact" className="py-24 bg-background">
       <div className="max-w-7xl mx-auto px-6">
@@ -17,7 +56,7 @@ export default function Contact() {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                 >
-                  <h2 className="text-sm font-bold tracking-[0.2em] text-secondary uppercase mb-6">Let's Talk</h2>
+                  <h2 className="text-sm font-bold tracking-[0.2em] text-secondary uppercase mb-6">Let&apos;s Talk</h2>
                   <p className="text-4xl md:text-5xl font-bold mb-8">
                     Ready to Start Your <span className="text-secondary italic">Green</span> Initiative?
                   </p>
@@ -58,34 +97,46 @@ export default function Contact() {
               </div>
 
               <div className="mt-20 pt-10 border-t border-white/10">
-                <p className="text-sm text-white/40">© 1997-2026 MNS Suarez Environmental Studies Consultants. All rights reserved.</p>
+                <p className="text-sm text-white/40">(c) 1997-2026 MNS Suarez Environmental Studies Consultants. All rights reserved.</p>
               </div>
             </div>
 
             {/* Contact Form */}
             <div className="bg-background p-12 md:p-20">
-              <form className="space-y-6">
+              <form className="space-y-6" onSubmit={handleSubmit}>
                 <div className="grid md:grid-cols-2 gap-6">
                   <div className="space-y-2">
-                    <label className="text-sm font-bold text-primary ml-1">Full Name</label>
+                    <label htmlFor="contact-name" className="text-sm font-bold text-primary ml-1">Full Name</label>
                     <input
+                      id="contact-name"
+                      name="name"
                       type="text"
+                      autoComplete="name"
+                      required
                       placeholder="Juan Dela Cruz"
                       className="w-full px-6 py-4 rounded-2xl bg-gray-100 dark:bg-slate-900 border border-border text-blue-950 dark:text-foreground focus:outline-none focus:ring-2 focus:ring-secondary/50 transition-all placeholder:text-blue-950/40 dark:placeholder:text-foreground/40"
                     />
                   </div>
                   <div className="space-y-2">
-                    <label className="text-sm font-bold text-primary ml-1">Email Address</label>
+                    <label htmlFor="contact-email" className="text-sm font-bold text-primary ml-1">Email Address</label>
                     <input
+                      id="contact-email"
+                      name="email"
                       type="email"
+                      autoComplete="email"
+                      required
                       placeholder="juan@example.com"
                       className="w-full px-6 py-4 rounded-2xl bg-gray-100 dark:bg-slate-900 border border-border text-blue-950 dark:text-foreground focus:outline-none focus:ring-2 focus:ring-secondary/50 transition-all placeholder:text-blue-950/40 dark:placeholder:text-foreground/40"
                     />
                   </div>
                 </div>
                 <div className="space-y-2">
-                  <label className="text-sm font-bold text-primary ml-1">Service Interested In</label>
-                  <select className="w-full px-6 py-4 rounded-2xl bg-gray-100 dark:bg-slate-900 border border-border text-blue-950 dark:text-foreground focus:outline-none focus:ring-2 focus:ring-secondary/50 transition-all appearance-none">
+                  <label htmlFor="contact-service" className="text-sm font-bold text-primary ml-1">Service Interested In</label>
+                  <select
+                    id="contact-service"
+                    name="service"
+                    className="w-full px-6 py-4 rounded-2xl bg-gray-100 dark:bg-slate-900 border border-border text-blue-950 dark:text-foreground focus:outline-none focus:ring-2 focus:ring-secondary/50 transition-all appearance-none"
+                  >
                     <option>Environmental Impact Assessment</option>
                     <option>Sustainability Auditing</option>
                     <option>Waste Management</option>
@@ -93,18 +144,30 @@ export default function Contact() {
                   </select>
                 </div>
                 <div className="space-y-2">
-                  <label className="text-sm font-bold text-primary ml-1">Your Message</label>
+                  <label htmlFor="contact-message" className="text-sm font-bold text-primary ml-1">Your Message</label>
                   <textarea
+                    id="contact-message"
+                    name="message"
                     rows={5}
+                    required
                     placeholder="Tell us about your project..."
                     className="w-full px-6 py-4 rounded-2xl bg-gray-100 dark:bg-slate-900 border border-border text-blue-950 dark:text-foreground focus:outline-none focus:ring-2 focus:ring-secondary/50 transition-all resize-none placeholder:text-blue-950/40 dark:placeholder:text-foreground/40"
                   ></textarea>
                 </div>
+                <p
+                  aria-live="polite"
+                  className={`min-h-6 text-sm font-semibold ${
+                    status === 'error' ? 'text-red-700' : 'text-primary'
+                  }`}
+                >
+                  {statusMessage}
+                </p>
                 <button
                   type="submit"
+                  disabled={status === 'submitting'}
                   className="w-full bg-secondary text-primary font-bold py-5 rounded-2xl flex items-center justify-center gap-3 hover:bg-secondary/90 transition-all shadow-lg shadow-secondary/20 group"
                 >
-                  Send Message <Send size={20} className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
+                  {status === 'submitting' ? 'Sending...' : 'Send Message'} <Send size={20} className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
                 </button>
               </form>
             </div>

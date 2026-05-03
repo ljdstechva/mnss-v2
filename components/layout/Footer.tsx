@@ -2,6 +2,21 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { Globe, Mail, Phone, Shield } from 'lucide-react'
 
+const quickLinks = [
+  { label: 'Home', href: '/' },
+  { label: 'About Us', href: '/about' },
+  { label: 'Services', href: '/services' },
+  { label: 'Projects', href: '/projects' },
+  { label: 'Contact', href: '/contact' },
+]
+
+const socialLinks = [
+  { label: 'Website', href: '/', icon: Globe },
+  { label: 'Email', href: 'mailto:info@mnsconsultants.com', icon: Mail },
+  { label: 'Phone', href: 'tel:+6321234567', icon: Phone },
+  { label: 'Compliance services', href: '/services', icon: Shield },
+]
+
 export default function Footer() {
   return (
     <footer className="bg-background pt-24 pb-12 border-t border-border">
@@ -23,9 +38,9 @@ export default function Footer() {
               Pioneering sustainable environmental solutions since 1997. Expert consultancy for a greener tomorrow.
             </p>
             <div className="flex gap-4">
-              {[Globe, Mail, Phone, Shield].map((Icon, i) => (
-                <a key={i} href="#" className="w-10 h-10 rounded-full border border-border flex items-center justify-center text-primary hover:bg-primary hover:text-white transition-all">
-                  <Icon size={18} />
+              {socialLinks.map(({ label, href, icon: Icon }) => (
+                <a key={label} href={href} aria-label={label} className="w-10 h-10 rounded-full border border-border flex items-center justify-center text-primary hover:bg-primary hover:text-white transition-all">
+                  <Icon size={18} aria-hidden="true" />
                 </a>
               ))}
             </div>
@@ -34,10 +49,10 @@ export default function Footer() {
           <div>
             <h4 className="font-bold text-primary mb-8 text-lg">Quick Links</h4>
             <ul className="space-y-4">
-              {['Home', 'About Us', 'Services', 'Projects', 'Careers', 'Contact'].map((link) => (
-                <li key={link}>
-                  <Link href={`/${link.toLowerCase().replace(' ', '-')}`} className="text-foreground/60 hover:text-primary transition-colors">
-                    {link}
+              {quickLinks.map((link) => (
+                <li key={link.label}>
+                  <Link href={link.href} className="text-foreground/60 hover:text-primary transition-colors">
+                    {link.label}
                   </Link>
                 </li>
               ))}
@@ -82,7 +97,7 @@ export default function Footer() {
 
         <div className="flex flex-col md:flex-row justify-between items-center pt-8 border-t border-border gap-4">
           <p className="text-foreground/40 text-sm">
-            © 2026 MNS Suarez Environmental Studies Consultants.
+            (c) 2026 MNS Suarez Environmental Studies Consultants.
           </p>
           <div className="flex gap-8 text-sm text-foreground/40">
             <Link href="#" className="hover:text-primary transition-colors">Privacy Policy</Link>

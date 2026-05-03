@@ -1,15 +1,21 @@
 import Services from '@/components/sections/Services'
 import { Metadata } from 'next'
+import { getMnssPublicContent, getSiteInformationByKey } from '@/lib/mnss-content'
 
 export const metadata: Metadata = {
   title: 'Our Services | MNS Suarez Environmental Studies Consultants',
   description: 'Comprehensive environmental consultancy services including EIA, auditing, and waste management.',
 }
 
-export default function ServicesPage() {
+export const revalidate = 0
+
+export default async function ServicesPage() {
+  const { siteInformation } = await getMnssPublicContent()
+  const serviceOverview = getSiteInformationByKey(siteInformation, 'services_overview')
+
   return (
     <div className="pt-20">
-      <Services />
+      <Services serviceOverview={serviceOverview} />
       <section className="py-24 bg-background">
         <div className="max-w-7xl mx-auto px-6">
           <h2 className="text-4xl font-bold text-primary mb-12 text-center">Comprehensive Environmental Solutions</h2>

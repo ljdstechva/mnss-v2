@@ -1,8 +1,10 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import Image from 'next/image'
 import { ArrowUpRight } from 'lucide-react'
+import type { MnssSiteInformation } from '@/types/database'
+import { fallbackSiteInformation } from '@/lib/mnss-fallbacks'
+import { ManagedImage } from '@/components/ui/ManagedImage'
 
 const stats = [
   {
@@ -28,7 +30,14 @@ const stats = [
   },
 ]
 
-export default function About() {
+type AboutProps = {
+  siteInformation?: MnssSiteInformation[]
+}
+
+export default function About({ siteInformation = fallbackSiteInformation }: AboutProps) {
+  const infoBlocks = siteInformation.length > 0 ? siteInformation : fallbackSiteInformation
+  const companyProfile = getSiteBlock(infoBlocks, 'company_profile') ?? infoBlocks[0]
+
   return (
     <section id="about" className="py-24 bg-background">
       <div className="max-w-7xl mx-auto px-6">
@@ -54,11 +63,24 @@ export default function About() {
             transition={{ duration: 0.8, delay: 0.2 }}
           >
             <p className="text-foreground/70 text-lg leading-relaxed mb-8">
-              Since 1997, MNS Suarez Environmental Studies Consultants has been at the forefront of environmental advocacy and technical excellence. We bridge the gap between development and conservation through rigorous scientific analysis and strategic planning.
+              {companyProfile?.body ??
+                'MNS Suarez Environmental Studies Consultants provides technical environmental study and compliance support for public and private development projects.'}
             </p>
-            <button className="flex items-center gap-2 text-primary font-bold hover:gap-4 transition-all">
-               Learn More About Our Journey <ArrowUpRight size={20} />
-            </button>
+            <div className="grid gap-3">
+              {infoBlocks.slice(0, 3).map((item) => (
+                <article
+                  key={item.id}
+                  className="rounded-2xl border border-primary/10 bg-white/55 p-4 dark:bg-white/5"
+                >
+                  <h3 className="text-sm font-black uppercase tracking-[0.16em] text-primary">
+                    {item.title}
+                  </h3>
+                  {item.body ? (
+                    <p className="mt-2 text-sm leading-relaxed text-foreground/60">{item.body}</p>
+                  ) : null}
+                </article>
+              ))}
+            </div>
           </motion.div>
         </div>
 
@@ -87,11 +109,11 @@ export default function About() {
               </div>
 
               <div className="relative h-48 w-full rounded-2xl overflow-hidden mt-auto">
-                 <Image
+                 <ManagedImage
                    src={stat.image}
                    alt={stat.label}
-                   fill
                    className="object-cover group-hover:scale-110 transition-transform duration-1000"
+                   sizes="(min-width: 768px) 33vw, 100vw"
                  />
               </div>
             </motion.div>
@@ -100,4 +122,8 @@ export default function About() {
       </div>
     </section>
   )
+}
+
+function getSiteBlock(siteInformation: MnssSiteInformation[], sectionKey: string) {
+  return siteInformation.find((item) => item.section_key === sectionKey) ?? null
 }
